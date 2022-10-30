@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Project Meta Data ===========================================================================-->
+    <title>TADO_DISPLAY</title>
+    <meta charset="utf-8">
+
+    <!-- Library CSS Styles ==========================================================================-->
+
+	<link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
+    <link href="/static/css/metro-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- App CSS Style ===============================================================================-->
+    <link rel="stylesheet" href="/static/css/style.css" />
+
+</head>
+
+<body>
+ 
+    <button  onclick="LOADDATA()" id="reload" type="button" class="btn btn-default btn-sm" style="position: absolute;right: 1%;top: 1%;    z-index: 9999;">
+        <span class="glyphicon glyphicon-refresh"></span> Refresh
+      </button>
+
+    <!-- LOGO ========================================================================================-->
+    <header id="fullMenuBar">
+        <div class="logo">
+            <h1>Tado Display</h1>
+        </div>
+    </header>
+    <div id=maximiseWindow style="position:absolute;z-index:-999;width:100vw;height:100vh"></div>
+	<div id=buttonGroup class="tiles-grid"></div>
+ <!--   <div>
+        <canvas id="myChart"></canvas>
+    </div>
+-->
+
+
+   <!--CSS Scripts ============================================================================-->
+	<script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
+    <!--Library Scripts ============================================================================-->
+
+    <!--Application Scripts =======================================================================-->
+  <script src="/static/scripts/webJs.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+
+</html>

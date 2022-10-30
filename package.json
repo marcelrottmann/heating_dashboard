@@ -1,0 +1,19 @@
+{
+  "name": "tado_final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "calculate-correlation": "^1.2.3",
+    "connect": "^3.7.0",
+    "express": "^4.18.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "serve-static": "^1.15.0"
+  }
+}
