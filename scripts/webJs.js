@@ -37,6 +37,11 @@ function LOADDATA() {
 
 }
 
+window.onload = function () {
+    LOADDATA(); //Make sure the function fires as soon as the page is loaded
+    setTimeout(LOADDATA(), 600000); //Then set it to run again after ten minutes
+}
+
 function getData() {
     fetch("/static/data/heating.json").then(response => {
         if (!response.ok) {
