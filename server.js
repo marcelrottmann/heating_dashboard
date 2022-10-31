@@ -46,8 +46,9 @@ var zonesArray = []
 
 
 const fs = require("fs")
-var username = JSON.parse(fs.readFileSync("./settings/connections.json")).username
-var password = JSON.parse(fs.readFileSync("./settings/connections.json")).password
+var settingsJson = JSON.parse(fs.readFileSync("./settings/connections.json"))
+var username = settingsJson[0].username
+var password = settingsJson[0].password
 var request = require ('request')
 var rp = require('request-promise')
 var weatherData
