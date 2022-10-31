@@ -41,12 +41,13 @@ var accessToken
 var homeId
 var dataArray = []
 var zonesArray = []
-var username = JSON.parse(fs.readFileSync("./settings/connections.json")).username
-var password = JSON.parse(fs.readFileSync("./settings/connections.json")).password
+
 
 
 
 const fs = require("fs")
+var username = JSON.parse(fs.readFileSync("./settings/connections.json")).username
+var password = JSON.parse(fs.readFileSync("./settings/connections.json")).password
 var request = require ('request')
 var rp = require('request-promise')
 var weatherData
