@@ -104,11 +104,12 @@ function GETHIST(x,createdDate,name) {
 		nD = new Date()
 		nD.setDate(nD.getDate() - (i + 1))
 		if (nD > new Date(createdDate)){
-		calls.push(nD.toISOString().split("T")[0])
+			console.log(nD)
+		calls.push(nD.toISOString().substring(0,10))
 		numberOfCallsTarget = numberOfCallsTarget+1
 		}
 	}
-	console.log(numberOfCalls, calls)
+	console.log(fs.writeFileSync("./calls.json",JSON.stringify(calls)))
 	calls.forEach(function (i) {
 
 		var options3 = {
@@ -127,7 +128,7 @@ function GETHIST(x,createdDate,name) {
 				//console.log(JSON.parse(parsedBody))
 				
 				x = JSON.parse(parsedBody)
-				//fs.writeFileSync("./history" + zone+"-"+date + ".json", JSON.stringify(x))
+				fs.writeFileSync("./history" + zone+"-"+date + ".json", JSON.stringify(x))
 				y = {}
 				y.zone = zone
 				y.name = name
