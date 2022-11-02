@@ -199,6 +199,31 @@ function GETHIST(x) {
 				console.log(total)
 			}
 
+			
+			if (x.callForHeat.dataIntervals) {
+				total = []
+				x.callForHeat.dataIntervals.forEach(function (x) {
+					
+						from = new Date(x.from)
+						to = new Date(x.to)
+						
+						while (from < to ){
+							console.log(x,from,to)
+							var value = ""
+							if (x.value == "LOW"){value = 0.25} else if (x.value == "MEDIUM"){value = 0.5} else if (x.value == "HIGH"){value = 1}else {value = 0}
+							v = {"x":roundToNearest15(from).toISOString().substring(0,16),"y":value}
+							console.log(v)
+							total.push(v)
+							from.setSeconds(from.getSeconds()+60)
+						}
+
+					
+				})
+				y.heatingIntervals = getUniqueListBy(total,"x")
+				//fs.writeFileSync("./"+y.zone+"testing.json",JSON.stringify(total))
+			}
+
+
 
 			completeb = true
 			zonesArray.forEach(function (z) { if (y.zone == z.id) { z.histSection = y } })
@@ -547,4 +572,20 @@ function CREATETILESB(x) {
 	
 	ready = true
 
+}
+
+
+//----Round Function
+function roundToNearest15(date = new Date()) {
+	const minutes = 15;
+	const ms = 1000 * 60 * minutes;
+  
+	// 👇️ replace Math.round with Math.ceil to always round UP
+	return new Date(Math.ceil(date.getTime() / ms) * ms);
+  }
+
+//Unique Function
+
+function getUniqueListBy(arr, key) {
+    return [...new Map(arr.map(item => [item[key], item])).values()]
 }
