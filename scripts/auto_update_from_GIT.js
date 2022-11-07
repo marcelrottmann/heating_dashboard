@@ -4,8 +4,8 @@ const rp = require('request-promise')
 const request = require('request')
 destination = './temp.zip'
 var AdmZip = require('adm-zip');
-nwgui = require('nw.gui')
-var loadingmodal = document.getElementById("load");
+
+
 cleanup()
 //Version compare---------------------------------------------------------------------
 function compareVersion(v1, v2) {
@@ -24,23 +24,16 @@ function compareVersion(v1, v2) {
 }
 //------------------------------------------------------------------End Version Compare
 //Close Loading Modal------------------------------------------------------------------
-function CloseLoadingModal() {
-	loadingmodal.style.display = "none";
-	loadingmodal.style.visibility= "hidden";
-	document.getElementById('HandsOnTableValue').style.display = "block"
-}
+
 //------------------------------------------------------------------End Closing
 //CheckVersion--------------------------------------------------------------------------
-loadingmodal = document.getElementById('load')
-loadingmodal.style.display = "block";
-loadingmodal.style.visibility= "visible";
 setTimeout(GetPackageFile,1000);
 GetPackageFile()
 
 function GetPackageFile(x) {
     var options2 = {
         'method': 'GET',
-        'url': 'https://raw.githubusercontent.com/marcelmrottmann/ConfigEditor/master/package.json',
+        'url': 'https://raw.githubusercontent.com/marcelrottmann/heating_dashboard/master/package.json',
     };
     rp(options2)
         .then(function (parsedBody) {
@@ -56,7 +49,7 @@ function GetPackageFile(x) {
         })
         .catch(function (err) {
             console.log(err)
-            window.alert('Failed to read version' + err.error)
+            //window.alert('Failed to read version' + err.error)
             CloseLoadingModal()
             return
         });
@@ -66,7 +59,7 @@ function GetPackageFile(x) {
 //------------------------------------------------------------------------------End Check Version
 //Get All Files and Copy them and Clean up------------------------------------------------------
 function GetAllFiles(x) {
-    request('https://codeload.github.com/marcelmrottmann/ConfigEditor/zip/master')
+    request('https://codeload.github.com/marcelrottmann/heating_dashboard/zip/master')
         .pipe(fs.createWriteStream('temp.zip'))
         .on('close', function () {
             console.log('File written!'); ReadFiles()
@@ -83,7 +76,7 @@ function ReadFiles(x) {
     console.log('true')
         ncp("./temp/ConfigEditor-master", "./", function (err) {
             if (err) {
-              window.alert('Failed to download the new version, the programme will try again next time you reload the programme.')
+              //window.alert('Failed to download the new version, the programme will try again next time you reload the programme.')
               PackageJSON = JSON.parse(fs.readFileSync('./package.json'))
               PackageJSON.version = "1.0.0"
               fs.writeFileSync('./package.json',JSON.stringify(PackageJSON))
@@ -91,8 +84,6 @@ function ReadFiles(x) {
 
             }
             console.log('done!');
-		window.alert('A new version has been downloaded you will see the effective changes immediately')
-		nwgui.Window.get().reload(3);
            });
            
            fs.stat('./temp.zip', function (err, stats) {
