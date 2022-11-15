@@ -72,7 +72,7 @@ async function GETAUTH(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			console.log(JSON.parse(parsedBody).access_token)
+			//console.log(JSON.parse(parsedBody).access_token)
 			accessToken = JSON.parse(parsedBody).access_token
 			return GETHOME(JSON.parse(parsedBody).access_token)
 
@@ -94,7 +94,7 @@ function GETHOME(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			console.log(JSON.parse(parsedBody).homeId)
+			//console.log(JSON.parse(parsedBody).homeId)
 			homeId = JSON.parse(parsedBody).homeId
 			return GETZONES(JSON.parse(parsedBody).homeId)
 		})
@@ -115,7 +115,7 @@ function GETZONES(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			console.log(JSON.parse(parsedBody))
+			//console.log(JSON.parse(parsedBody))
 			zonesArray = JSON.parse(parsedBody)
 
 			JSON.parse(parsedBody).forEach(function (x) {
@@ -141,12 +141,12 @@ function GETWEATHER(x) {
 	rp(options3)
 		.then(function (parsedBody) {
 			response = JSON.parse(parsedBody)
-			console.log(response)
+			//console.log(response)
 			weatherData = {}
 			weatherData.temp = response.outsideTemperature.celsius
 			weatherData.weather = response.weatherState.value
 
-			console.log(weatherData)
+			//console.log(weatherData)
 
 		})
 		.catch(function (err) {
@@ -158,7 +158,9 @@ function GETWEATHER(x) {
 
 function GETHIST(x) {
 
-	today = new Date().toISOString().split("T")[0]
+	dDate = new Date()
+	today = dDate.getFullYear()+"-"+String(dDate.getMonth()+1).padStart(2,"0")+"-"+String(dDate.getDate()).padStart(2,"0")
+
 
 	var options3 = {
 		'method': 'GET',
@@ -168,13 +170,14 @@ function GETHIST(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			//fs.writeFileSync("./history" + x + ".json", parsedBody.body)
+			fs.writeFileSync("./history" + x + ".json", parsedBody.body)
 
 			zone = parsedBody.request.uri.path.split("/")[6]
-			console.log(zone)
+			//console.log(zone)
 
 			parsedBody = parsedBody.body
 			//console.log(JSON.parse(parsedBody))
+
 
 			x = JSON.parse(parsedBody)
 			y = {}
@@ -196,21 +199,30 @@ function GETHIST(x) {
 				+ ":" 
 				+String(Math.round(parseFloat("0." + total.toString().split(".")[1]) * 60)).padStart(2,"0")
 			    y.total =  total
-				console.log(total)
+				//console.log(total)
 			}
 
 			
 			if (x.callForHeat.dataIntervals) {
 				total = []
 				x.callForHeat.dataIntervals.forEach(function (x) {
-					
+						date = new Date()
+						
+						
+						if (new Date(x.from).getDate() < date.getDate()){
+							x.from = new Date(date.getFullYear(),date.getMonth(),date.getDate())
+						}
+
+						//console.log(date,x.from,x.to)
+
 						from = new Date(x.from)
 						to = new Date(x.to)
 						
 						while (from < to ){
-							console.log(x,from,to)
+							//console.log(x,from,to)
 							var value = ""
 							if (x.value == "LOW"){value = 0.25} else if (x.value == "MEDIUM"){value = 0.5} else if (x.value == "HIGH"){value = 1}else {value = 0}
+		
 							v = {"x":roundToNearest15(from).toISOString().substring(0,16),"y":value}
 							console.log(v)
 							total.push(v)
@@ -220,7 +232,8 @@ function GETHIST(x) {
 					
 				})
 				y.heatingIntervals = getUniqueListBy(total,"x")
-				//fs.writeFileSync("./"+y.zone+"testing.json",JSON.stringify(total))
+				
+				fs.writeFileSync("./"+y.zone+"testing.json",JSON.stringify(y.heatingIntervals))
 			}
 
 
@@ -228,7 +241,7 @@ function GETHIST(x) {
 			completeb = true
 			zonesArray.forEach(function (z) { if (y.zone == z.id) { z.histSection = y } })
 			zonesArray.forEach(function (z) {
-				console.log(z.histSection,z.dataSection)
+				//console.log(z.histSection,z.dataSection)
 				if (z.dataSection && z.dataSection.zone != 0){
 				if (!z.histSection) { completeb = false }
 				if (!z.dataSection) { completeb = false }
@@ -328,7 +341,7 @@ function GETAUTHB(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			console.log(JSON.parse(parsedBody).token)
+			//console.log(JSON.parse(parsedBody).token)
 			accessTokenB = JSON.parse(parsedBody).token
 			GETHOMEB(JSON.parse(parsedBody).token)
 
@@ -354,7 +367,7 @@ function GETHOMEB(x) {
 	};
 	rp(options3)
 		.then(function (parsedBody) {
-			console.log(JSON.parse(parsedBody)[0].veId)
+			//console.log(JSON.parse(parsedBody)[0].veId)
 			homeId = JSON.parse(parsedBody)[0].veId
 			GETZONESB(JSON.parse(parsedBody)[0].veId)
 		})
@@ -426,7 +439,7 @@ function GETDATAB(x) {
 
 			x = JSON.parse(parsedBody)
 			zone = x.resourceId
-			console.log(x)
+			//console.log(x)
 			y = {}
 			y.zone = zone
 
@@ -436,7 +449,7 @@ function GETDATAB(x) {
 			complete = true
 			zonesArrayB.forEach(function (z) { if (y.zone == z.resourceId) { z.dataSection = y } })
 			zonesArrayB.forEach(function (z) {
-				console.log(z.histSection,z.dataSection)
+				//console.log(z.histSection,z.dataSection)
 
 				if (!z.histSection) { complete = false }
 				if (!z.dataSection && z.dataSection != undefined) { complete = false }
@@ -444,7 +457,7 @@ function GETDATAB(x) {
 			})
 
 			//fs.writeFileSync("./zonesArrayB.json", JSON.stringify(zonesArrayB))
-			console.log(complete)
+			//console.log(complete)
 			if (complete == true) { CREATETILESB() }
 
 
@@ -487,7 +500,7 @@ function GETDATAC(x) {
 
 			x = JSON.parse(parsedBody)
 			zone = x.resourceId
-			console.log(x)
+			//console.log(x)
 			y = {}
 			y.zone = zone
 
@@ -509,13 +522,13 @@ function GETDATAC(x) {
 				//}
 			})
 			//fs.writeFileSync("./zonesArrayC.json", JSON.stringify(zonesArrayB))
-			console.log(completeb)
+			//console.log(completeb)
 			if (completeb == true) { CREATETILESB() }
 
 
 		})
 		.catch(function (err) {
-			console.log(err)
+			//console.log(err)
 			ready = false
 
 			return
@@ -531,10 +544,10 @@ function CREATETILESB(x) {
 	electricity = {}
 
 	budget = JSON.parse(fs.readFileSync("./settings/connections.json"))
-	console.log(budget)
+	//console.log(budget)
 	total = { "budget": budget[0].budget,"monthBudget":budget[0].monthBudget, "cost": null,"monthCost": null, "id": "BUDGET", "name": "Budget" }
 	zonesArrayB.forEach(function (x) {
-		console.log(x)
+		//console.log(x)
 		if (x.name == "gas cost") {
 			gas.cost = x.dataSection.amount;
 			total.cost = x.dataSection.amount;
