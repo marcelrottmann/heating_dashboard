@@ -94,15 +94,20 @@ function GETZONES(x) {
 function GETHIST(x,createdDate,name) {
 
 
-	startOfMonth = new Date()
-	startOfMonth.setDate(1)
-	today = new Date()
-	numberOfCalls = Math.ceil(Math.abs(today - startOfMonth)/(24 * 60 * 60 * 1000))
+	dummyDate = new Date()
+	month = dummyDate.getMonth()
+ 	year = dummyDate.getFullYear()
+ 	date = dummyDate.getDate()
+  	startOfMonth = new Date(year, month, "1")
+	today = new Date(year, month, date)
+
+	numberOfCalls = Math.ceil(Math.abs(today - startOfMonth)/(24 * 60 * 60 * 1000)+1)
+
 	calls = []
 	for (let i = 0; i < numberOfCalls; i++) {
 		
-		nD = new Date()
-		nD.setDate(nD.getDate() - (i + 1))
+		nD = new Date(year, month, date)
+		nD.setDate(nD.getDate() - (i))
 		if (nD > new Date(createdDate)){
 			console.log(nD)
 		calls.push(nD.toISOString().substring(0,10))
