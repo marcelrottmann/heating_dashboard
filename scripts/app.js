@@ -4,15 +4,15 @@ var homeId
 var zonesArray = []
 
 const fs = require("fs")
-var request = require ('request')
-var rp = require('request-promise')
-var weatherData
+const request = require("request")
+const rp = require("request-promise")
+
 var history = []
 var numberOfCallsTarget
 var numberOfCallsActual
 
 
-function GETAUTH(x) {
+function GETAUTHC(x) {
 
 	var options3 = {
 		'method': 'POST',
@@ -32,6 +32,7 @@ function GETAUTH(x) {
 			console.log(JSON.parse(parsedBody).access_token)
 			accessToken = JSON.parse(parsedBody).access_token
 			GETHOME(JSON.parse(parsedBody).access_token)
+			
 
 		})
 		.catch(function (err) {
@@ -39,6 +40,7 @@ function GETAUTH(x) {
 
 			return
 		});
+		return
 }
 
 
@@ -187,4 +189,33 @@ function GETHIST(x,createdDate,name) {
 	});
 }
 
-GETAUTH()
+
+function GETBINS(x) {
+
+	var options3 = {
+		'method': 'GET',
+		'url': 'https://api.reading.gov.uk/api/collections/310050532',
+		'headers': {},
+		'strictSSL': false
+	};
+	rp(options3)
+		.then(function (parsedBody) {
+			console.log(JSON.parse(parsedBody))
+			fs.writeFileSync("./../history/binDays.json",JSON.stringify(parsedBody))
+					
+		})
+		.catch(function (err) {
+			console.log(err)
+
+			return
+		});
+		return
+}
+
+
+
+
+GETBINS()
+
+setInterval(() => GETAUTHC(),60000)
+GETAUTHC()

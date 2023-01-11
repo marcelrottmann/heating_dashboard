@@ -21,12 +21,13 @@ function LOADDATA() {
         getData()
         getReadingData()
         getHistoricData()
+        getBinData()
 
 
         for (let i = 1; i < 10; i++) {
             setTimeout(function timer() {
-                if (functionResponses == 3) {
-                    functionResponses = 4
+                if (functionResponses == 4) {
+                    functionResponses = 5
 
                     addFunction()
                     resetBtn.removeAttribute("disabled")
@@ -44,6 +45,7 @@ window.onload = function () {
     setInterval(LOADDATA(), 60000)
 }
 
+
 function getData() {
     fetch("/static/data/heating.json").then(response => {
         if (!response.ok) {
@@ -58,6 +60,23 @@ function getData() {
     });
 
 }
+
+function getBinData() {
+    fetch("/static/history/binDays.json").then(response => {
+        if (!response.ok) {
+            throw new Error("HTTP error " + response.status); // Rejects the promise
+        }
+        else { return response.json() }
+    }).then(function (data) {
+        // `data` is the parsed version of the JSON returned from the above endpoint.
+        console.log(data);  // { "userId": 1, "id": 1, "title": "...", "body": "..." }
+        refreshBinDays(data)
+
+    });
+
+}
+
+
 
 function getHistoricData() {
     fetch("/static/history/tempHistory.json").then(response => {
@@ -286,6 +305,9 @@ function refreshTemperatureHistory(data) {
     functionResponses = functionResponses + 1
 
 }
+
+
+
 
 function refreshHeatingVisuals(data) {
     reportDataSetToday = []
@@ -556,6 +578,55 @@ function refreshMeterVisuals(data) {
 
 }
 
+
+function refreshBinDays(data) {
+  
+    console.log(data,data.collections)
+    data = JSON.parse(data)
+    //tiles = [gas, electricity, total]
+
+        tempDiv = document.createElement('div')
+        tempDiv.id = "Bins"
+        tempDiv.setAttribute("data-role", "tile")
+        tempDiv.setAttribute("style","background-color: #4a00b3;")
+        tempDiv.setAttribute("data-size", "medium")
+        //Branding Bar
+        innerDiv = document.createElement('span')
+        innerDiv.setAttribute("class", "branding-bar")
+        innerDiv.setAttribute("style", " font-size:1.4rem ")
+        innerDiv.innerHTML = "Bins"
+        //Icon Content
+        innerContent = document.createElement('div')
+        innerContent.setAttribute("class", "tile-content")
+
+        var collectionTypes = []
+        htmlContent = data.collections.map(function(x){
+            if (collectionTypes.length >0){
+                if (collectionTypes.indexOf(x.service.split(" ")[0])>-1){return}
+                else collectionTypes.push(x.service.split(" ")[0])
+                return x.date.substring(0,10) + "-"+ x.service.split(" ")[0]
+            }
+            else collectionTypes.push(x.service.split(" ")[0])
+
+            return x.date.substring(0,10) + "-"+ x.service.split(" ")[0]
+        })
+        htmlContent =  htmlContent.filter(function( element ) {
+            return element !== undefined;
+         });
+        console.log(htmlContent)
+        innerContent.innerHTML = htmlContent.join("<br>")
+
+        //Append
+
+        tempDiv.appendChild(innerDiv)
+        tempDiv.appendChild(innerContent)
+
+        tilesCollection.push(tempDiv)
+
+        
+    functionResponses = functionResponses + 1
+
+}
 
 function maximiseTile(x) {
     if (document.defaultView.getComputedStyle(x, null).getPropertyValue("z-index") == 99) {
