@@ -202,7 +202,7 @@ function GETBINS(x) {
 		.then(function (parsedBody) {
 			console.log(JSON.parse(parsedBody))
 			fs.writeFileSync("./../history/binDays.json",JSON.stringify(parsedBody))
-					
+			return
 		})
 		.catch(function (err) {
 			console.log(err)
